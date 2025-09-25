@@ -414,7 +414,3 @@ Le système de workflow automatique permet de simuler un processus de gestion de
 - **Frontend** : ESLint, conventions React
 - **Commits** : Messages clairs en français
 - **Tests** : Structure prête pour les tests (framework à définir)
-
-## Licence
-
-ISC - Voir le fichier LICENSE pour plus de détails
