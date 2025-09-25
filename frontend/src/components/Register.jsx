@@ -21,7 +21,6 @@ const Register = ({ onRegisterSuccess, onSwitchToLogin }) => {
       [name]: value,
     });
 
-    // Validation en temps réel
     if (errors[name]) {
       setErrors({
         ...errors,
@@ -33,7 +32,6 @@ const Register = ({ onRegisterSuccess, onSwitchToLogin }) => {
   const validateForm = () => {
     const newErrors = {};
 
-    // Validation nom
     if (!formData.nom.trim()) {
       newErrors.nom = 'Le nom est requis';
     } else if (formData.nom.length < 3) {
@@ -44,14 +42,12 @@ const Register = ({ onRegisterSuccess, onSwitchToLogin }) => {
       newErrors.nom = 'Le nom ne peut contenir que des lettres et des espaces';
     }
 
-    // Validation email
     if (!formData.email.trim()) {
       newErrors.email = 'L\'email est requis';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Veuillez fournir un email valide';
     }
 
-    // Validation mot de passe
     if (!formData.password) {
       newErrors.password = 'Le mot de passe est requis';
     } else if (formData.password.length < 8) {
@@ -60,7 +56,6 @@ const Register = ({ onRegisterSuccess, onSwitchToLogin }) => {
       newErrors.password = 'Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre';
     }
 
-    // Validation confirmation mot de passe
     if (!formData.confirmPassword) {
       newErrors.confirmPassword = 'La confirmation du mot de passe est requise';
     } else if (formData.password !== formData.confirmPassword) {
@@ -90,10 +85,8 @@ const Register = ({ onRegisterSuccess, onSwitchToLogin }) => {
       });
 
       if (result.success) {
-        // Afficher le message de succès - l'utilisateur doit se connecter manuellement
         setSuccessMessage('Inscription réussie ! Vous pouvez maintenant vous connecter avec vos identifiants.');
       } else {
-        // Gérer les erreurs du backend
         if (result.errors && result.errors.length > 0) {
           const backendErrors = {};
           result.errors.forEach(error => {

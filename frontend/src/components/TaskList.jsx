@@ -15,7 +15,6 @@ const TaskList = ({ onLogout }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // États synchronisés avec l'URL
   const [currentPage, setCurrentPage] = useState(() => {
     const page = parseInt(searchParams.get('page')) || 1;
     return page;
@@ -27,16 +26,13 @@ const TaskList = ({ onLogout }) => {
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
 
-  // État pour contrôler la visibilité du formulaire (caché par défaut)
   const [showTaskForm, setShowTaskForm] = useState(false);
 
-  // État pour le filtre actif synchronisé avec l'URL
   const [activeFilter, setActiveFilter] = useState(() => {
     const filter = searchParams.get('filter') || 'all';
     return filter;
   });
 
-  // Récupérer l'utilisateur connecté
   const { user } = useAuth();
 
   const fetchTasks = async (page = currentPage, limit = itemsPerPage) => {
@@ -55,7 +51,6 @@ const TaskList = ({ onLogout }) => {
     }
   };
 
-  // Synchroniser l'état avec l'URL
   useEffect(() => {
     const params = new URLSearchParams();
     if (currentPage !== 1) params.set('page', currentPage.toString());
@@ -113,7 +108,6 @@ const TaskList = ({ onLogout }) => {
 
   const statusCounts = getStatusCounts();
 
-  // Fonction pour filtrer les tâches
   const getFilteredTasks = () => {
     if (!user) return tasks;
 
@@ -130,7 +124,6 @@ const TaskList = ({ onLogout }) => {
 
   const filteredTasks = getFilteredTasks();
 
-  // Recalculer les statistiques basées sur les tâches filtrées
   const getFilteredStatusCounts = () => {
     const counts = {
       EN_COURS: 0,

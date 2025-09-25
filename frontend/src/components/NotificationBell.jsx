@@ -1,9 +1,3 @@
-/**
- * Composant NotificationBell - Cloche de notifications avec compteur
- *
- * Affiche une cloche avec un badge indiquant le nombre de notifications non lues.
- * Permet d'ouvrir un panneau de notifications.
- */
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import api from '../services/api';
@@ -15,17 +9,14 @@ const NotificationBell = () => {
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
 
-  // Récupérer le nombre de notifications non lues
   const fetchUnreadCount = async () => {
     try {
       const response = await api.getUnreadNotificationCount();
       setUnreadCount(response.count);
     } catch {
-      // Silently handle error
     }
   };
 
-  // Récupérer les notifications
   const fetchNotifications = async () => {
     if (loading) return;
     setLoading(true);
@@ -33,13 +24,11 @@ const NotificationBell = () => {
       const response = await api.getNotifications();
       setNotifications(response);
     } catch {
-      // Silently handle error
     } finally {
       setLoading(false);
     }
   };
 
-  // Ouvrir/fermer le panneau
   const toggleNotifications = async () => {
     setIsOpen(!isOpen);
     if (!isOpen) {
@@ -47,7 +36,6 @@ const NotificationBell = () => {
     }
   };
 
-  // Marquer une notification comme lue
   const markAsRead = async (notificationId) => {
     try {
       await api.markNotificationAsRead(notificationId);
@@ -58,11 +46,9 @@ const NotificationBell = () => {
       );
       setUnreadCount(prev => Math.max(0, prev - 1));
     } catch {
-      // Silently handle error
     }
   };
 
-  // Marquer toutes les notifications comme lues
   const markAllAsRead = async () => {
     try {
       await api.markAllNotificationsAsRead();
@@ -71,11 +57,9 @@ const NotificationBell = () => {
       );
       setUnreadCount(0);
     } catch {
-      // Silently handle error
     }
   };
 
-  // Formater la date relative
   const formatRelativeTime = (dateString) => {
     const now = new Date();
     const date = new Date(dateString);
@@ -87,13 +71,11 @@ const NotificationBell = () => {
     return `Il y a ${Math.floor(diffInSeconds / 86400)} j`;
   };
 
-  // Récupérer les notifications et le compteur au montage et périodiquement
   useEffect(() => {
     if (user) {
       fetchUnreadCount();
       fetchNotifications(); // Récupérer aussi les notifications au démarrage
 
-      // Rafraîchir plus fréquemment pour les notifications
       const interval = setInterval(() => {
         fetchUnreadCount();
         if (!isOpen) { // Ne pas rafraîchir si le panneau est ouvert pour éviter les conflits

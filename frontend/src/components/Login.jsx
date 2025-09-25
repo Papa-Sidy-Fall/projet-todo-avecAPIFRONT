@@ -47,21 +47,18 @@ const Login = ({ onLoginSuccess, onSwitchToRegister }) => {
       [name]: value,
     });
 
-    // Validation en temps réel
     validateField(name, value);
   };
 
   const validateForm = () => {
     const newErrors = {};
 
-    // Validation email
     if (!credentials.email.trim()) {
       newErrors.email = 'L\'adresse email est requise';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(credentials.email)) {
       newErrors.email = 'Veuillez saisir une adresse email valide';
     }
 
-    // Validation mot de passe
     if (!credentials.password.trim()) {
       newErrors.password = 'Le mot de passe est requis';
     } else if (credentials.password.length < 6) {
@@ -76,7 +73,6 @@ const Login = ({ onLoginSuccess, onSwitchToRegister }) => {
     e.preventDefault();
     setError('');
 
-    // Validation du formulaire
     if (!validateForm()) {
       return;
     }

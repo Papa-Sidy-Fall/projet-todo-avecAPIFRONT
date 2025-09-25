@@ -16,10 +16,8 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Vérifier si l'utilisateur est déjà connecté au chargement
     const token = localStorage.getItem('token');
     if (token) {
-      // Vérifier la validité du token en récupérant les informations utilisateur
       api.getCurrentUser()
         .then(response => {
           if (response.success) {
@@ -30,12 +28,10 @@ export const AuthProvider = ({ children }) => {
               email: response.user.email
             });
           } else {
-            // Token invalide, le supprimer
             localStorage.removeItem('token');
           }
         })
         .catch(() => {
-          // Erreur lors de la vérification, supprimer le token
           localStorage.removeItem('token');
         })
         .finally(() => {

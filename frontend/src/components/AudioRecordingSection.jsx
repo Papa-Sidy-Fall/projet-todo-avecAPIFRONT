@@ -1,31 +1,3 @@
-/**
- * Composant AudioRecordingSection - Section d'enregistrement audio pour les tâches
- *
- * Ce composant permet d'enregistrer et gérer des notes audio avec une limite de temps :
- * - Contrôles d'enregistrement (démarrer/arrêter)
- * - Limite automatique de 30 secondes maximum par enregistrement
- * - Compteur de temps en temps réel (format MM:SS)
- * - Barre de progression visuelle pendant l'enregistrement
- * - Avertissement 5 secondes avant la fin automatique
- * - Indicateur visuel d'enregistrement en cours (point rouge animé)
- * - Lecteur audio intégré pour l'aperçu avec durée affichée
- * - Possibilité de supprimer l'enregistrement
- *
- * Fonctionnalités techniques :
- * - Utilise l'API MediaRecorder du navigateur
- * - Timer automatique avec setInterval (1 seconde)
- * - Arrêt forcé après 30 secondes
- * - Nettoyage automatique des timers
- * - Gestion d'état réactive du temps écoulé
- *
- * @param {Object} props - Les propriétés du composant
- * @param {boolean} props.isRecording - Si l'enregistrement est en cours
- * @param {Blob} [props.audioBlob] - Blob audio enregistré
- * @param {string} [props.audioUrl] - URL de l'audio pour le lecteur
- * @param {Function} props.onStartRecording - Fonction pour démarrer l'enregistrement
- * @param {Function} props.onStopRecording - Fonction pour arrêter l'enregistrement (appelée automatiquement après 30s)
- * @param {Function} props.onRemoveAudio - Fonction pour supprimer l'audio
- */
 import React, { useState, useEffect, useRef } from 'react';
 
 const AudioRecordingSection = ({
@@ -40,14 +12,12 @@ const AudioRecordingSection = ({
   const timerRef = useRef(null);
   const MAX_RECORDING_TIME = 30; // 30 secondes maximum
 
-  // Démarre le timer quand l'enregistrement commence
   useEffect(() => {
     if (isRecording) {
       setRecordingTime(0);
       timerRef.current = setInterval(() => {
         setRecordingTime(prev => {
           const newTime = prev + 1;
-          // Arrêter automatiquement après 30 secondes
           if (newTime >= MAX_RECORDING_TIME) {
             onStopRecording();
             return MAX_RECORDING_TIME;
@@ -56,7 +26,6 @@ const AudioRecordingSection = ({
         });
       }, 1000);
     } else {
-      // Nettoyer le timer quand l'enregistrement s'arrête
       if (timerRef.current) {
         clearInterval(timerRef.current);
         timerRef.current = null;
@@ -64,7 +33,6 @@ const AudioRecordingSection = ({
       setRecordingTime(0);
     }
 
-    // Nettoyer le timer au démontage du composant
     return () => {
       if (timerRef.current) {
         clearInterval(timerRef.current);
@@ -72,14 +40,12 @@ const AudioRecordingSection = ({
     };
   }, [isRecording, onStopRecording]);
 
-  // Formater le temps en MM:SS
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Calculer le pourcentage de progression (pour la barre de progression)
   const progressPercentage = (recordingTime / MAX_RECORDING_TIME) * 100;
 
   return (

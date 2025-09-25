@@ -13,10 +13,8 @@ const TaskItem = ({ task, onUpdate, onDelete }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Récupérer l'utilisateur connecté
   const { user } = useAuth();
 
-  // Vérifier si l'utilisateur connecté est le propriétaire ou l'utilisateur assigné
   const isOwner = user && (task.userId === user.userId || task.assignedTo === user.userId);
 
   const handleEdit = () => {

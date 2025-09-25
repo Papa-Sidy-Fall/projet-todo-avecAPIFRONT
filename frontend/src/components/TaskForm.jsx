@@ -1,19 +1,3 @@
-/**
- * Composant TaskForm - Formulaire principal de création/modification de tâches
- *
- * Ce composant orchestre la création de nouvelles tâches avec :
- * - Champs principaux (titre, description, statut, assignation)
- * - Upload d'images avec validation et aperçu
- * - Enregistrement audio avec contrôles intégrés
- * - Validation en temps réel et gestion d'erreurs
- * - Soumission multipart (texte + fichiers)
- *
- * Structure modulaire utilisant des sous-composants spécialisés pour
- * maintenir une séparation claire des responsabilités.
- *
- * @param {Object} props - Les propriétés du composant
- * @param {Function} props.onTaskCreated - Fonction appelée après création réussie
- */
 import React, { useState, useEffect, useRef } from 'react';
 import api from '../services/api';
 import ImageUploadSection from './ImageUploadSection';
@@ -54,7 +38,6 @@ const TaskForm = ({ onTaskCreated }) => {
     fetchUsers();
   }, []);
 
-  // Fonction de validation
   const validateField = (name, value) => {
     const errors = {};
 
@@ -70,14 +53,12 @@ const TaskForm = ({ onTaskCreated }) => {
         break;
 
       case 'description':
-        // Description optionnelle, mais si remplie, vérifier la longueur maximale
         if (value.trim() && value.trim().length > 1000) {
           errors.description = 'La description ne peut pas dépasser 1000 caractères';
         }
         break;
 
       case 'status':
-        // Statut optionnel, mais si fourni, vérifier la validité
         if (value && !['EN_COURS', 'TERMINER', 'A_FAIRE'].includes(value)) {
           errors.status = 'Statut invalide';
         }
@@ -99,14 +80,12 @@ const TaskForm = ({ onTaskCreated }) => {
       [name]: processedValue,
     });
 
-    // Validation en temps réel
     const fieldErrors = validateField(name, processedValue);
     setFieldErrors(prev => ({
       ...prev,
       [name]: fieldErrors[name] || ''
     }));
 
-    // Marquer le champ comme touché
     setTouched(prev => ({
       ...prev,
       [name]: true
@@ -133,7 +112,6 @@ const TaskForm = ({ onTaskCreated }) => {
         const url = URL.createObjectURL(blob);
         setAudioUrl(url);
 
-        // Arrêter tous les tracks du stream
         stream.getTracks().forEach(track => track.stop());
       };
 
@@ -160,11 +138,9 @@ const TaskForm = ({ onTaskCreated }) => {
     }
   };
 
-  // Validation complète du formulaire
   const validateForm = () => {
     const errors = {};
 
-    // Validation du titre (seul champ obligatoire)
     if (!formData.titre.trim()) {
       errors.titre = 'Le titre est obligatoire';
     } else if (formData.titre.trim().length < 3) {
@@ -173,7 +149,6 @@ const TaskForm = ({ onTaskCreated }) => {
       errors.titre = 'Le titre ne peut pas dépasser 100 caractères';
     }
 
-    // Description et statut sont optionnels, mais vérifier s'ils ont des erreurs
     if (formData.description.trim() && formData.description.trim().length > 1000) {
       errors.description = 'La description ne peut pas dépasser 1000 caractères';
     }
@@ -197,7 +172,6 @@ const TaskForm = ({ onTaskCreated }) => {
     e.preventDefault();
     setError('');
 
-    // Validation du formulaire
     if (!validateForm()) {
       setError('Veuillez corriger les erreurs dans le formulaire');
       return;
@@ -206,10 +180,8 @@ const TaskForm = ({ onTaskCreated }) => {
     setLoading(true);
 
     try {
-      // Créer FormData pour l'upload multipart
       const formDataToSend = new FormData();
 
-      // Ajouter les champs texte
       formDataToSend.append('titre', formData.titre);
       formDataToSend.append('description', formData.description);
       formDataToSend.append('status', formData.status);
@@ -217,12 +189,10 @@ const TaskForm = ({ onTaskCreated }) => {
         formDataToSend.append('assignedTo', formData.assignedTo.toString());
       }
 
-      // Ajouter l'image si elle existe
       if (selectedImage) {
         formDataToSend.append('image', selectedImage);
       }
 
-      // Ajouter l'audio si il existe
       if (audioBlob) {
         formDataToSend.append('audio', audioBlob, 'audio.wav');
       }
@@ -230,7 +200,6 @@ const TaskForm = ({ onTaskCreated }) => {
       await api.createTask(formDataToSend);
       onTaskCreated();
 
-      // Reset du formulaire
       setFormData({
         titre: '',
         description: '',

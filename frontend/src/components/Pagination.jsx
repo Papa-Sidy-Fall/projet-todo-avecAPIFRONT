@@ -36,7 +36,6 @@ const Pagination = ({
 
   const visiblePages = getVisiblePages();
 
-  // Afficher la pagination même s'il n'y a qu'une page pour que l'utilisateur comprenne le système
   if (totalItems === 0) {
     return null;
   }
